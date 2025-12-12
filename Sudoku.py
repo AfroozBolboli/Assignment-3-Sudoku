@@ -57,7 +57,32 @@ class Sudoku:
         @param grid: 9x9 list of Fields
         """
 
-    # TODO: for each field, add its neighbors
+    # For each field, add its neighbors
+        for row in range(9):
+            for column in range(9):
+                neighbours = set()
+
+                # Row neigbour 
+                for row_neighbour in range(9):
+                    if row_neighbour != row:
+                        neighbours.add(grid[row_neighbour][column])
+
+                # Column neighbour
+                for column_neighbour in range(9):
+                    if column_neighbour != column:
+                        neighbours.add(grid[row][column_neighbour])
+
+                # Box neighbor 
+                # To get the position of the current box
+                box_row = (row//3)*3
+                box_column = (column//3)*3
+                for row_neighbour in range(box_row,box_row+3):
+                    for column_neighbour in range(box_column,box_column+3):
+                        if column_neighbour == column and row_neighbour == row :
+                            continue
+                        neighbours.add(grid[row_neighbour][column_neighbour])
+
+                grid[row][column].set_neighbours(list(neighbours))
 
     def board_to_string(self):
 
