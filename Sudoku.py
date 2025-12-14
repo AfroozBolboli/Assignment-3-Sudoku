@@ -84,8 +84,27 @@ class Sudoku:
 
                 grid[row][column].set_neighbours(list(neighbours))
 
-    def board_to_string(self):
+    # Bonus: Extra constraint
+    def track_remaining_values(self):
+        """
+        Initializes the possible values for each row, column, and box
+        based on the current board.
+        """
+        self.row_possibilities = [set(range(1, 10)) for _ in range(9)]
+        self.col_possibilities = [set(range(1, 10)) for _ in range(9)]
+        self.box_possibilities = [set(range(1, 10)) for _ in range(9)]
 
+        for row in range(9):
+            for col in range(9):
+                val = self.board[row][col].get_value()
+                if val != 0:
+                    self.row_possibilities[row].discard(val)
+                    self.col_possibilities[col].discard(val)
+                    box_index = (row // 3) * 3 + (col // 3)
+                    self.box_possibilities[box_index].discard(val)
+
+    def board_to_string(self):
+        
         output = ""
         for row in range(len(self.board)):
             for col in range(len(self.board[row])):
