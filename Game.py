@@ -29,7 +29,7 @@ class Game:
         # Adding these variables to measure complexity 
         handled_nodes = 0
         domain_shrinkage = 0 
-
+        #time, heuristic, file, domain shrinkage, nodes handles 
         while queue:
             if self.heuristic:
                 Xm, Xn = self.heuristic(queue)
@@ -61,29 +61,36 @@ class Game:
             return True
     
         def backtrack():
-                # Find unassigned field with smallest domain
+                # Find cells without value and smallest domain
                 min_domain_size = 10
-                target_field = None
-                for row in board:
-                    for field in row:
-                        if not field.is_finalized() and len(field.get_domain()) < min_domain_size:
-                            min_domain_size = len(field.get_domain())
-                            target_field = field
+                current_field = None
 
-                if target_field is None:
-                    # All fields assigned
+                for row in range(9):
+                    for column in range(9):
+                        field = board[row][column]
+                        if field.is_finalized():
+                            continue
+                        if len(field.get_domain()) < min_domain_size:
+                            min_domain_size = len(field.get_domain())
+                            current_field = field
+
+                if current_field is None:
+                    # All fields are assigned
                     return self.valid_solution()
 
-                for value in target_field.get_domain()[:]:
-                    original_domain = target_field.get_domain()[:]
-                    target_field.set_value(value)
+                current_domain = current_field.get_domain()[:]
+                for value in current_domain:
+                    original_domain = current_domain
+                    current_field.set_value(value)
                     if backtrack():
                         return True
-                    target_field.value = 0
-                    target_field.domain = original_domain  # restore domain
-
+                    
+                    # Did not work restore the domain
+                    current_field.value = 0
+                    current_field.domain = original_domain  
 
         print(f"Handled nodes: {handled_nodes}, Domain shrinkages: {domain_shrinkage}")
+        print(self.sudoku)
         return backtrack()
 
 
