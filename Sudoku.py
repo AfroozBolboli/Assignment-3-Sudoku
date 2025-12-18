@@ -81,27 +81,35 @@ class Sudoku:
                         if column_neighbour == column and row_neighbour == row :
                             continue
                         neighbours.add(grid[row_neighbour][column_neighbour])
+                        
 
                 grid[row][column].set_neighbours(list(neighbours))
 
     # Bonus: Extra constraint
     def track_remaining_values(self):
         """
-        Initializes the possible values for each row, column, and box
-        based on the current board.
+        This function keeps the track of
+        which values are still availble to be used.
         """
-        self.row_possibilities = [set(range(1, 10)) for _ in range(9)]
-        self.col_possibilities = [set(range(1, 10)) for _ in range(9)]
-        self.box_possibilities = [set(range(1, 10)) for _ in range(9)]
+        # Variables to store the available values
+        self.available_row_values = []
+        self.available_column_values = []
+        self.available_box_values = []
+
+        for i in range(9):
+            self.available_row_values.append({1,2,3,4,5,6,7,8,9})
+            self.available_column_values.append({1,2,3,4,5,6,7,8,9})
+            self.available_box_values.append({1,2,3,4,5,6,7,8,9})
 
         for row in range(9):
-            for col in range(9):
-                val = self.board[row][col].get_value()
-                if val != 0:
-                    self.row_possibilities[row].discard(val)
-                    self.col_possibilities[col].discard(val)
-                    box_index = (row // 3) * 3 + (col // 3)
-                    self.box_possibilities[box_index].discard(val)
+            for column in range(9):
+                value = self.board[row][column].get_value()
+                if value != 0: # If the cell is already filled
+                    # Remove them from available lists
+                    self.available_row_values[row].discard(value)
+                    self.available_column_values[column].discard(value)
+                    box_index = (row // 3) * 3 + (column // 3)
+                    self.available_box_values[box_index].discard(value)
 
     def board_to_string(self):
         

@@ -1,15 +1,16 @@
 import os
 from Game import Game
 from Sudoku import Sudoku
+from Heuristic import FIFO, MRV, Priority_To_Finalized_Neighbors
 
 sudoku_folder = os.path.join(os.path.dirname(__file__), "Sudokus")
 
 class App:
 
-
     @staticmethod
     def solve_sudoku(sudoku_file):
-        game = Game(Sudoku(sudoku_file))
+        heuristic = MRV
+        game = Game(Sudoku(sudoku_file), heuristic)
         game.show_sudoku()
         if (game.solve() and game.valid_solution()):
             print("Solved!")
